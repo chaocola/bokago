@@ -1,12 +1,4 @@
-package bokago
-
-type BaseResponse struct {
-	Code    int    `json:"code"`
-	Msg     string `json:"msg"`
-	Success bool   `json:"success"`
-}
-
-// -------------------------------------------------------------------------------------------
+package Model
 
 // AccessTokenResponse   登录获取token
 type AccessTokenResponse struct {
@@ -213,4 +205,15 @@ type Token struct {
 	ShopID      string `json:"shop_id"`
 	StartTime   int64  `json:"start_time"`
 	Error       string `json:"error"`
+}
+
+// GetIDResponse 获取单号
+type GetIDResponse struct {
+	BaseResponse
+	Result struct {
+		BillDate     int64  `json:"billDate"`
+		BillNo       string `json:"billNo"`
+		BillTime     string `json:"billTime"`
+		ChangeBillNo int    `json:"changeBillNo"`
+	} `json:"result"`
 }

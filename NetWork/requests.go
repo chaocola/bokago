@@ -1,4 +1,4 @@
-package bokago
+package NetWork
 
 import (
 	"bytes"
@@ -68,16 +68,16 @@ func BaseRequest(url string, params map[string]interface{}, headers map[string]i
 
 }
 
-type RequestsMain struct{}
+type ClientMain struct{}
 
 // GET http Get method
-func (RequestsMain) GET(url string, params map[string]interface{}, headers map[string]interface{}) []byte {
+func (ClientMain) GET(url string, params map[string]interface{}, headers map[string]interface{}) []byte {
 	resBody := BaseRequest(url, params, headers, nil, "GET")
 	return resBody
 }
 
 // POST http post method
-func (RequestsMain) POST(url string, params map[string]interface{}, headers map[string]interface{}, body interface{}) []byte {
+func (ClientMain) POST(url string, params map[string]interface{}, headers map[string]interface{}, body interface{}) []byte {
 
 	if _, ok := headers["Content-Type"]; !ok {
 		headers["Content-Type"] = "application/json;charset=UTF-8"
@@ -87,4 +87,4 @@ func (RequestsMain) POST(url string, params map[string]interface{}, headers map[
 	return resBody
 }
 
-var Requests = RequestsMain{}
+var Client = ClientMain{}
