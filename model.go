@@ -207,3 +207,10 @@ type TodayTicketOneResult struct {
 }
 
 // -------------------------------------------------------------------------------------------
+
+type Token struct {
+	AccessToken string `json:"access_token"`
+	ShopID      string `json:"shop_id"`
+	StartTime   int64  `json:"start_time"`
+	Error       string `json:"error"`
+}

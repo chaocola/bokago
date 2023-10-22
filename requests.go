@@ -42,6 +42,7 @@ func BaseRequest(url string, params map[string]interface{}, headers map[string]i
 			req.Header.Set(key, fmt.Sprintf("%v", val))
 		}
 	}
+
 	//http client
 	client := &http.Client{}
 	//log.Printf("Go GET URL : %s \n", req.URL.String())
@@ -78,7 +79,7 @@ func (RequestsMain) GET(url string, params map[string]interface{}, headers map[s
 // POST http post method
 func (RequestsMain) POST(url string, params map[string]interface{}, headers map[string]interface{}, body interface{}) []byte {
 
-	if headers["Content-Type"] == "" {
+	if _, ok := headers["Content-Type"]; !ok {
 		headers["Content-Type"] = "application/json;charset=UTF-8"
 	}
 
