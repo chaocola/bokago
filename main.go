@@ -2,9 +2,7 @@ package bokago
 
 import "github.com/oddbug/bokago/DefaultConfig"
 
-var (
-	BOKA *DefaultConfig.Config
-)
+var BOKA *DefaultConfig.Config
 
 // Init
 //
@@ -16,9 +14,9 @@ var (
 //	@param source  来源
 //	@param sign   签名
 //	@param other 其他参数 Expire int64 token过期时间 默认为5000 Referer string 地址 默认为https://s3.boka.vc/
-func Init(custID string, compID string, userName string, passWord string, source string, sign string, other ...interface{}) {
+func Init(custID string, compID string, userName string, passWord string, source string, sign string, other ...interface{}) *DefaultConfig.Config {
 
-	BOKA = &DefaultConfig.Config{
+	config := &DefaultConfig.Config{
 		CustID:   custID,
 		CompID:   compID,
 		UserName: userName,
@@ -27,8 +25,12 @@ func Init(custID string, compID string, userName string, passWord string, source
 		Sign:     sign,
 	}
 
-	BOKA.Init(other...)
+	config.Init(other...)
 
-	go BOKA.TokenTask()
+	go config.TokenTask()
+
+	BOKA = config
+
+	return BOKA
 
 }

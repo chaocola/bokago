@@ -1,4 +1,4 @@
-package Model
+package Response
 
 // TicketIDResult
 // @Description: 开单单号

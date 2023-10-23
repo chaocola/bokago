@@ -1,4 +1,4 @@
-package Model
+package Response
 
 // BaseResponse 基础返回结构体
 type BaseResponse struct {
@@ -14,3 +14,12 @@ type Response[T any] struct {
 	Success bool   `json:"success"`
 	Result  T      `json:"result"`
 }
+
+// AccessTokenResponse 获取token
+type AccessTokenResponse = Response[AccessTokenResult]
+
+// TicketIDResponse 获取开单单号
+type TicketIDResponse = Response[TicketIDResult]
+
+// SearchVipResponse 搜索会员信息
+type SearchVipResponse = SearchVipResponseData

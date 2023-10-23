@@ -2,18 +2,13 @@ package DefaultConfig
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/oddbug/bokago/Model"
+	"github.com/oddbug/bokago/Model/Response"
 	"github.com/oddbug/bokago/NetWork"
 	"net/url"
 	"reflect"
 	"time"
-)
-
-var (
-	privateExpire          int64 = 5000
-	privateReferer               = `https://s3.boka.vc/`
-	privateTokenTaskSignal       = make(chan bool, 1)
 )
 
 //
@@ -29,11 +24,12 @@ type Config struct {
 	Source   string `json:"source"`
 	Sign     string `json:"sign"`
 
-	// 微信登录用户绑定的 WechatOpenid
+	// 管理员微信绑定的 WechatOpenid
 	DeviceID string `json:"deviceId"`
 	// 程序内部使用
-	Token   Model.Token `json:"token"`
-	EmpName string      `json:"empName"`
+	Token    Response.Token `json:"token"`
+	EmpName  string         `json:"empName"`
+	CompName string         `json:"compName"`
 }
 
 func (config *Config) GetHeaders() map[string]interface{} {
@@ -97,7 +93,7 @@ func (config *Config) TokenTask() {
 		if err := recover(); err != nil {
 			ticker.Stop()
 			time.Sleep(time.Second)
-			config.TokenTask()
+			go config.TokenTask()
 
 		}
 	}()
@@ -122,7 +118,7 @@ func (config *Config) TokenTask() {
 //	@return TokenContent token信息
 func (config *Config) GetAccessToken() bool {
 
-	var data Model.AccessTokenResponse
+	var data Response.AccessTokenResponse
 
 	BASEURL := "https://api.bokao2o.com/auth/merchant/v2/user/login"
 
@@ -143,24 +139,25 @@ func (config *Config) GetAccessToken() bool {
 	err := json.Unmarshal(res, &data)
 
 	if err != nil {
-		config.Token = Model.Token{
-			Error: err.Error(),
+		config.Token = Response.Token{
+			Error: err,
 		}
 		return false
 	}
 
 	if data.Code == 200 || data.Success {
 
-		config.Token = Model.Token{
+		config.CompName = data.Result.CompName
+		config.Token = Response.Token{
 			AccessToken: data.Result.Token,
 			ShopID:      data.Result.ShopID,
 			StartTime:   time.Now().Unix(),
-			Error:       "",
+			Error:       nil,
 		}
 		return true
 	} else {
-		config.Token = Model.Token{
-			Error: data.Msg,
+		config.Token = Response.Token{
+			Error: errors.New(data.Msg),
 		}
 		return false
 	}
