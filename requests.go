@@ -1,4 +1,4 @@
-package NetWork
+package bokago
 
 import (
 	"bytes"

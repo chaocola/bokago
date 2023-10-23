@@ -1,11 +1,9 @@
-package DefaultConfig
+package bokago
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/oddbug/bokago/Model/Response"
-	"github.com/oddbug/bokago/NetWork"
 	"net/url"
 	"reflect"
 	"time"
@@ -27,9 +25,9 @@ type Config struct {
 	// 管理员微信绑定的 WechatOpenid
 	DeviceID string `json:"deviceId"`
 	// 程序内部使用
-	Token    Response.Token `json:"token"`
-	EmpName  string         `json:"empName"`
-	CompName string         `json:"compName"`
+	Token    Token  `json:"token"`
+	EmpName  string `json:"empName"`
+	CompName string `json:"compName"`
 }
 
 func (config *Config) GetHeaders() map[string]interface{} {
@@ -69,7 +67,7 @@ func (config *Config) GetHeaders() map[string]interface{} {
 //	@param params
 //	@return []byte
 func (config *Config) GET(url string, params map[string]interface{}) []byte {
-	return NetWork.Client.GET(url, params, config.GetHeaders())
+	return Client.GET(url, params, config.GetHeaders())
 }
 
 // POST
@@ -81,7 +79,7 @@ func (config *Config) GET(url string, params map[string]interface{}) []byte {
 //	@param body
 //	@return []byte
 func (config *Config) POST(url string, params map[string]interface{}, body interface{}) []byte {
-	return NetWork.Client.POST(url, params, config.GetHeaders(), body)
+	return Client.POST(url, params, config.GetHeaders(), body)
 }
 
 // TokenTask
@@ -118,11 +116,11 @@ func (config *Config) TokenTask() {
 //	@return TokenContent token信息
 func (config *Config) GetAccessToken() bool {
 
-	var data Response.AccessTokenResponse
+	var data AccessTokenResponse
 
 	BASEURL := "https://api.bokao2o.com/auth/merchant/v2/user/login"
 
-	res := NetWork.Client.POST(
+	res := Client.POST(
 		BASEURL,
 		nil,
 		map[string]interface{}{
@@ -139,7 +137,7 @@ func (config *Config) GetAccessToken() bool {
 	err := json.Unmarshal(res, &data)
 
 	if err != nil {
-		config.Token = Response.Token{
+		config.Token = Token{
 			Error: err,
 		}
 		return false
@@ -148,7 +146,7 @@ func (config *Config) GetAccessToken() bool {
 	if data.Code == 200 || data.Success {
 
 		config.CompName = data.Result.CompName
-		config.Token = Response.Token{
+		config.Token = Token{
 			AccessToken: data.Result.Token,
 			ShopID:      data.Result.ShopID,
 			StartTime:   time.Now().Unix(),
@@ -156,7 +154,7 @@ func (config *Config) GetAccessToken() bool {
 		}
 		return true
 	} else {
-		config.Token = Response.Token{
+		config.Token = Token{
 			Error: errors.New(data.Msg),
 		}
 		return false
