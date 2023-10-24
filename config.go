@@ -15,19 +15,16 @@ import (
 //
 
 type Config struct {
-	CustID   string `json:"custId"`
-	CompID   string `json:"compId"`
-	UserName string `json:"userName"`
-	PassWord string `json:"passWord"`
-	Source   string `json:"source"`
-	Sign     string `json:"sign"`
-
-	// 管理员微信绑定的 WechatOpenid
-	DeviceID string `json:"deviceId"`
-	// 程序内部使用
-	Token    Token  `json:"token"`
-	EmpName  string `json:"empName"`
-	CompName string `json:"compName"`
+	CustID            string `json:"custId"`
+	CompID            string `json:"compId"`
+	UserName          string `json:"userName"`
+	PassWord          string `json:"passWord"`
+	Source            string `json:"source"`
+	Sign              string `json:"sign"`
+	AdminWechatOpenID string `json:"adminWechatOpenId"`
+	Token             Token  `json:"token"`
+	EmpName           string `json:"empName"`
+	CompName          string `json:"compName"`
 }
 
 func (config *Config) GetHeaders() map[string]interface{} {
@@ -53,8 +50,8 @@ func (config *Config) GetHeaders() map[string]interface{} {
 		"origin":       privateReferer,
 		"access_token": token.AccessToken,
 		"accesstoken":  token.ShopID,
-		"device_id":    config.DeviceID,
-		"deviceid":     config.DeviceID,
+		"device_id":    config.AdminWechatOpenID,
+		"deviceid":     config.AdminWechatOpenID,
 		"tenant":       config.CustID,
 	}
 }
