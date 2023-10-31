@@ -63,8 +63,8 @@ func (config *Config) GetHeaders() map[string]interface{} {
 //	@param url
 //	@param params
 //	@return []byte
-func (config *Config) GET(url string, params map[string]interface{}) []byte {
-	return Client.GET(url, params, config.GetHeaders())
+func (config *Config) GET(url string, params map[string]interface{}, other ...time.Duration) []byte {
+	return Client.GET(url, params, config.GetHeaders(), other...)
 }
 
 // POST
@@ -75,8 +75,8 @@ func (config *Config) GET(url string, params map[string]interface{}) []byte {
 //	@param params
 //	@param body
 //	@return []byte
-func (config *Config) POST(url string, params map[string]interface{}, body interface{}) []byte {
-	return Client.POST(url, params, config.GetHeaders(), body)
+func (config *Config) POST(url string, params map[string]interface{}, body interface{}, other ...time.Duration) []byte {
+	return Client.POST(url, params, config.GetHeaders(), body, other...)
 }
 
 // TokenTask
